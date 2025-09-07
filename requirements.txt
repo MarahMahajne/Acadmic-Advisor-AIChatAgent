@@ -1,0 +1,20 @@
+chromadb
+langchain
+langchain-core
+langchain-community
+langchain_text_splitters
+sentence-transformers
+
+# Gemini (Google) LLM
+langchain-google-genai
+google-generativeai
+
+# PDF + utilities
+pdfplumber
+unstructured
+unstructured[all-docs]
+
+# env
+python-dotenv
+
+PyPDF2
