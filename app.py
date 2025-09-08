@@ -1,9 +1,10 @@
-# app.py
+# app.py (updated to use majors_extractor + translator split)
 import os, re
 from dotenv import load_dotenv
 from pdf_rag.ingest import PDFIngestor
 from pdf_rag.query import HybridRAG
-from pdf_rag.majors_gemini_parser import build_major_profiles
+# UPDATED: use the new extractor (which internally calls translator)
+from pdf_rag.majors_extractor import build_major_profiles
 
 DATA_DIR = "data"
 MAJORS_JSON = "extracted_majors.json"

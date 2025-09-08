@@ -13,8 +13,8 @@ google-generativeai
 pdfplumber
 unstructured
 unstructured[all-docs]
+PyPDF2
 
 # env
 python-dotenv
 
-PyPDF2
