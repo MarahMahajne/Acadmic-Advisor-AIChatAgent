@@ -1,4 +1,4 @@
-# pdf_rag/ingest.py
+# ingestor/ingest.py
 import os
 import json
 from typing import List, Tuple

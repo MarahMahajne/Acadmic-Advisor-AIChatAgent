@@ -1,4 +1,4 @@
-# pdf_rag/translator.py
+# translator.py
 """
 MajorsTranslator — translates original (Hebrew/native) major names to English.
 

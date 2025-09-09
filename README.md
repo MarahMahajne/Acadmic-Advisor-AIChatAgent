@@ -26,3 +26,9 @@ Remove-Item -Recurse -Force .\chroma_db\
 Remove-Item -Force .\ingested_files.json
 
 Remove-Item -Force .\majors_profiles.json
+
+Remove-Item -Force .\majors_embeddings.json
+Remove-Item -Recurse -Force .\chroma_db\
+Remove-Item -Force .\ingested_files.json
+Remove-Item -Force .\extracted_majors.json
+

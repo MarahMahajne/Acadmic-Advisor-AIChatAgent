@@ -1,4 +1,4 @@
-# pdf_rag/query.py
+# query/query.py
 from __future__ import annotations
 
 import os
