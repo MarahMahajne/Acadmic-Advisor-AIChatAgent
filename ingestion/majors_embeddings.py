@@ -48,62 +48,36 @@ load_dotenv()
 
 def get_criteria() -> List[Tuple[str, str]]:
     """
-    Return the 50-criteria rubric as (key, description) pairs.
-    The order here is the canonical order for embedding vectors.
-    Scores are expected in range 0–5 (integers).
+    Return the rubric for cognitive + language style.
+    These are the 24 criteria we defined for mapping majors.
+    Scores are expected in range 0–100.
     """
     return [
-        ("math_intensity", "Depth and frequency of mathematics."),
-        ("statistics_prob", "Statistics/probability emphasis."),
-        ("theoretical_focus", "Abstract/theoretical orientation."),
-        ("hands_on_practice", "Applied/practical/experiential work."),
-        ("programming_coding", "Amount of coding/software scripting (any language)."),
-        ("software_engineering", "Software design, architecture, testing, DevOps."),
-        ("data_science_ai", "Data science / ML / AI topics."),
-        ("algorithms_systems", "Algorithms, operating systems, distributed systems."),
-        ("networks_security", "Networking, cybersecurity, protocols."),
-        ("hardware_electronics", "Circuits, embedded, digital/analog hardware."),
-        ("physics_foundations", "Physics, mechanics, electromagnetism."),
-        ("chemistry_emphasis", "General/organic/inorganic/physical chemistry."),
-        ("biology_life_sciences", "Biology, genetics, physiology, bio-related areas."),
-        ("earth_env_science", "Earth science, climate, ecology, environment."),
-        ("sustainability", "Sustainable design/analysis, ESG, lifecycle thinking."),
-        ("healthcare_clinical", "Clinical or healthcare systems exposure (non-patient)."),
-        ("patient_interaction", "Direct patient/clinical interaction requirements."),
-        ("lab_intensity", "Wet/physical lab work frequency and importance."),
-        ("fieldwork_outdoor", "Fieldwork/outdoor data collection or site visits."),
-        ("design_creativity", "Creative design, ideation, aesthetics."),
-        ("studio_practice", "Studio-based courses (e.g., architecture/design/art)."),
-        ("materials_manufacturing", "Materials science, manufacturing processes."),
-        ("robotics_mechatronics", "Robotics, control, mechatronics."),
-        ("ux_hci", "Human–computer interaction, UX research/design."),
-        ("visual_arts", "Drawing, painting, photography, visual arts."),
-        ("music_performance", "Music theory, performance, composition."),
-        ("theater_performance", "Theatre, acting, stage production."),
-        ("architecture_urban", "Architecture, urban design/planning."),
-        ("civil_infrastructure", "Structures, transportation, water, geotech."),
-        ("business_management", "Management, operations, organizational behavior."),
-        ("finance_economics", "Finance, micro/macro economics, econometrics."),
-        ("entrepreneurship", "Venture creation, innovation, product-market fit."),
-        ("policy_government", "Public policy, governance, regulation."),
-        ("law_ethics", "Law, ethics, compliance, standards."),
-        ("psychology_behavior", "Psychology, behavioral science, cognition."),
-        ("sociology_anthro", "Sociology, anthropology, social systems."),
-        ("education_pedagogy", "Education theory, pedagogy, teaching practice."),
-        ("communication_writing", "Academic/professional writing, documentation."),
-        ("public_speaking", "Presentation and oral communication."),
-        ("foreign_languages", "Foreign language requirement or emphasis."),
-        ("history_heritage", "History, heritage, archival, historiography."),
-        ("literature_philosophy", "Literature, philosophy, critical theory."),
-        ("global_international", "International/global issues or perspectives."),
-        ("quantitative_rigour", "Overall quantitative rigor across courses."),
-        ("qualitative_methods", "Qualitative research methods and analysis."),
-        ("research_methods", "Research design, methodology, inference."),
-        ("teamwork_projects", "Team projects, collaboration, cross-functional work."),
-        ("industry_internships", "Internships, co-ops, industry partnerships."),
-        ("licensure_path", "Clear path to a professional license (e.g., PE, RN)."),
-        ("workload_intensity", "Overall difficulty/time commitment."),
-        ("employability_breadth", "Breadth of roles graduates can pursue."),
+        ("data_analysis", "יכולת ניתוח נתונים והסקת מסקנות."),
+        ("quantitative_reasoning", "חשיבה כמותית ושימוש במודלים מתמטיים."),
+        ("logical_problem_solving", "פתרון בעיות לוגיות מורכבות."),
+        ("pattern_recognition", "זיהוי דפוסים ומגמות במידע."),
+        ("systems_thinking", "יכולת ראיית תמונה כוללת והבנת מערכות."),
+        ("risk_decision", "שקלול סיכונים וקבלת החלטות בתנאי אי־ודאות."),
+        ("strategic_thinking", "חשיבה אסטרטגית ארוכת טווח."),
+        ("cognitive_flexibility", "גמישות מחשבתית והתמודדות עם שינויים."),
+        ("curiosity_interdisciplinary", "סקרנות ויכולת לחבר בין תחומים שונים."),
+        ("creative_solutions", "יכולת יצירת פתרונות מקוריים."),
+        ("innovation_openness", "נכונות לניסוי וטעייה, פתיחות לחדשנות."),
+        ("opportunity_recognition", "ראיית הזדמנויות והפיכתן לפעולה."),
+        ("social_sensitivity", "רגישות למצבים חברתיים והבנת נקודות מבט שונות."),
+        ("teamwork", "עבודה בצוות, שיתוף פעולה ויכולת למידה משותפת."),
+        ("communication_mediation", "יכולת תקשורת בין־אישית וגישור."),
+        ("ethical_awareness", "מודעות לאתיקה ודילמות ערכיות."),
+        ("psychological_interest", "עניין במניעים ותהליכים פסיכולוגיים."),
+        ("theoretical_patience", "סבלנות ללמידה תאורטית לצד יישום."),
+        ("attention_to_detail", "קשב לדקויות בתקשורת ובמידע."),
+        ("leadership", "לקיחת אחריות, הובלה וניהול יוזמות."),
+        # --- הוספות שפה ---
+        ("hebrew_proficiency", "ידע והבנה בעברית אקדמית/מקצועית."),
+        ("english_proficiency", "ידע והבנה באנגלית אקדמית/מקצועית."),
+        ("hebrew_expression", "יכולת התבטאות בעברית בכתב ובעל פה."),
+        ("english_expression", "יכולת התבטאות באנגלית בכתב ובעל פה."),
     ]
 
 
@@ -155,17 +129,24 @@ def _safe_json_loads(s: str, default: Any = None) -> Any:
 def _build_scoring_prompt() -> ChatPromptTemplate:
     """
     Create the scoring prompt that asks Gemini to output a JSON object
-    with integer scores 0–5 for each criterion key, no commentary.
+    with integer scores 0–100 for each criterion key, no commentary.
+    This is used to build embedding vectors for majors and persons,
+    so consistency across all criteria is critical.
     """
-    criteria = get_criteria()
+    criteria = get_criteria()  # 24 or 50 criteria, depending on what you want
     keys = [k for k, _ in criteria]
     rubric_lines = "\n".join([f"- {k}: {_desc}" for k, _desc in criteria])
     tmpl = (
-        "You are scoring an academic MAJOR on a rubric of 50 criteria.\n"
-        "Return ONLY a JSON object mapping each criterion key to an INTEGER 0–5.\n"
+        "You are evaluating an academic MAJOR (or a PERSON profile) "
+        "on a rubric of cognitive, behavioral, and language criteria.\n"
+        "Return ONLY a JSON object mapping each criterion key to an INTEGER 0–100.\n"
+        "\n"
         "Rules:\n"
-        "- 0 = not present at all; 5 = very strong emphasis; use integers only.\n"
-        "- No extra text, no prose, no code fences.\n\n"
+        "- 0 = not present at all.\n"
+        "- 100 = extremely strong emphasis.\n"
+        "- Use only integers between 0 and 100.\n"
+        "- This JSON will be converted into an embedding vector, so all keys must be present.\n"
+        "- No commentary, no prose, no code fences — JSON only.\n\n"
         f"Criteria and meanings:\n{rubric_lines}\n\n"
         "MAJOR NAME (English): {name}\n"
         "SAMPLE COURSES (as-is, may contain Hebrew): {courses}\n"
@@ -210,10 +191,12 @@ def _score_one_major(item: Dict[str, Any],
 
 # --------------------------- Public API ---------------------------
 
-def build_major_embeddings(in_json: str = "extracted_majors.json",
+def build_majors_embeddings(in_json: str = "extracted_majors.json",
                            out_json: str = "majors_embeddings.json") -> str:
     """
     Build embeddings for all majors by scoring each on the 50-criteria rubric.
+    Skips rebuilding if `out_json` already exists and contains a non-empty list.
+
     Input:
         in_json  – path to the majors list produced by majors_extractor.py
     Output:
@@ -226,6 +209,20 @@ def build_major_embeddings(in_json: str = "extracted_majors.json",
             }
     Returns the output path.
     """
+    # --- Skip if embeddings already exist and look valid ---
+    if os.path.exists(out_json):
+        try:
+            with open(out_json, "r", encoding="utf-8") as f:
+                existing = json.load(f)
+            if isinstance(existing, list) and len(existing) > 0:
+                print(f"[skip] {out_json} already exists with {len(existing)} majors. Skipping embeddings build.")
+                return out_json
+            else:
+                print(f"[warn] {out_json} exists but is empty/invalid. Rebuilding...")
+        except Exception as e:
+            print(f"[warn] Failed to read existing {out_json} ({e}). Rebuilding...")
+
+    # --- Validate input majors JSON ---
     if not os.path.exists(in_json):
         raise FileNotFoundError(f"Input JSON not found: {in_json}")
 
@@ -234,6 +231,7 @@ def build_major_embeddings(in_json: str = "extracted_majors.json",
     if not isinstance(majors, list):
         raise ValueError("Input JSON must be a list of majors.")
 
+    # --- Build embeddings/scores ---
     llm = _make_llm(temperature=0.0)
     prompt = _build_scoring_prompt()
 
@@ -253,6 +251,7 @@ def build_major_embeddings(in_json: str = "extracted_majors.json",
         if i % 5 == 0:
             print(f"[embed] Scored {i}/{len(majors)} majors...")
 
+    # --- Write output ---
     with open(out_json, "w", encoding="utf-8") as f:
         json.dump(out_items, f, ensure_ascii=False, indent=2)
 
